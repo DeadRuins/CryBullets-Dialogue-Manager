@@ -23,3 +23,8 @@ Written in PyQt6.
 ## Contributing
 
 Contributions are welcome! If you have ideas or improvements, feel free to fork the repo and submit a pull request. For major changes, please open an issue first to discuss what you'd like to change.
+
+## Licences
+
+Licence of this very own program(Python) is GPL3 Licenced. Thus, please follow GPL3's basic rules of copyleft when you're redistribute or modify it. 
+However, the dialgoue code(ZScript) generated with this program is belong to yours. Feel free to use it to your own needs.
