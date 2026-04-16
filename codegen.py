@@ -14,7 +14,7 @@ def generate_zscript(frame_label, normal_frame, blink_frame, goto_label, seconds
 
     # Main Loop
     for i in range(10, count):
-        current_frame = blink_frame if (i % 10 == 0) else normal_frame
+        current_frame = blink_frame if (i % 60 < 3) else normal_frame
 
         command = f'{frame_label} {current_frame} 1 A_JumpIfInTargetInventory("SkipDialogue", 1, "{goto_label}");'
         lines.append(command)
