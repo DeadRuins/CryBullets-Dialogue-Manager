@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QAction, QDoubleValidator
 from PyQt6.QtCore import Qt
 
+from mutagen.oggvorbis import OggVorbis
 import codegen
 
 
@@ -113,27 +114,30 @@ class DialogueEditor(QMainWindow):
         file_toolbar = QToolBar("File")
         self.addToolBar(file_toolbar)
 
-        new_action = QAction("New", self)
-        new_action.triggered.connect(lambda: self.textEdit.clear())
-        file_toolbar.addAction(new_action)
-
-        open_action = QAction("Open", self)
-        open_action.triggered.connect(self.open_file)
-        file_toolbar.addAction(open_action)
-
-        save_action = QAction("Save", self)
-        save_action.triggered.connect(self.save_file)
-        file_toolbar.addAction(save_action)
+        loadaudio_action = QAction("Load Audio File", self)
+        loadaudio_action.triggered.connect(self.load_audio)
+        file_toolbar.addAction(loadaudio_action)
 
     def create_menu(self):
         file_menu = self.menuBar().addMenu("&File")
 
-        save_action = QAction("Save", self)
+        new_action = QAction("New Document", self)
+        new_action.setShortcut("Ctrl+N")
+        new_action.triggered.connect(lambda: self.textEdit.clear())
+        file_menu.addAction(new_action)
+
+        open_action = QAction("Open Document", self)
+        open_action.triggered.connect(self.open_file)
+        open_action.setShortcut("Ctrl+O")
+        file_menu.addAction(open_action)
+
+        save_action = QAction("Save Document", self)
         save_action.setShortcut("Ctrl+S")
         save_action.triggered.connect(self.save_file)
         file_menu.addAction(save_action)
 
         exit_action = QAction("Exit", self)
+        exit_action.setShortcut("Ctrl+Q")
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
 
@@ -148,6 +152,17 @@ class DialogueEditor(QMainWindow):
         if filename:
             with open(filename, "w", encoding="utf-8") as f:
                 f.write(self.textEdit.toPlainText())
+
+    def load_audio(self):
+        audio_filepath, _ = QFileDialog.getOpenFileName(self, "Open File", "", "Ogg Audio File(ogg)(*.ogg);;All Audio Files(mp3, wav, ogg, flac) (*.mp3 *.wav *.ogg *.flac);;All Files (*)")
+        try:
+            if audio_filepath:
+                audio = OggVorbis(audio_filepath)
+                duration = float(audio.info.length)
+                self.time_input.setText(f"{duration:.2f}")
+        except Exception as e:
+            print(f"Error reading audio: {e}")
+            self.status_label.setText(f"Error: {str(e)}")
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
