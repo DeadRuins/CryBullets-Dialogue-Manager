@@ -6,7 +6,7 @@ Written in PyQt6.
 # Screenshots
 
 ![Screenshots](screenshots/スクリーンショット_20260321_161949.png) 
-![Screenshots](screenshots/スクリーンショット_20260321_162549.png) 
+![Screenshots](screenshots/in-game-shot.webp) 
 
 ## Features
 
