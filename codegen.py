@@ -6,6 +6,7 @@ def generate_zscript(frame_label, normal_frame, blink_frame, openmouth_frame, op
     """Pure logic to build the script string."""
     mouth_times = parse_mouth_list(mouth_input_string)
     mouth_tics = [int(t * 35) for t in mouth_times]
+    IsSpeaking = False
 
     print(mouth_tics)
 
@@ -24,9 +25,13 @@ def generate_zscript(frame_label, normal_frame, blink_frame, openmouth_frame, op
     # Main Loop
     for i in range(10, count):
         if i in mouth_tics:
-            print("In Mouth Tics")
+            IsSpeaking = not IsSpeaking
+            print(IsSpeaking)
 
-        current_frame = blink_frame if (i % 60 < 3) else normal_frame
+        if IsSpeaking:
+            current_frame = blink_frame if (i % 60 < 3) else normal_frame
+        else:
+            current_frame = openmouth_frame if (i % 8 < 4) else normal_frame
 
         command = f'{frame_label} {current_frame} 1 A_JumpIfInTargetInventory("SkipDialogue", 1, "{goto_label}");'
         lines.append(command)
@@ -47,3 +52,4 @@ def parse_mouth_list(input_string):
         return [float(x) for x in raw_list]
     except ValueError:
         raise ValueError("Mouth Movements must be a list of numbers separated by commas!")
+
