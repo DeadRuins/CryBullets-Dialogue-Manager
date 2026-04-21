@@ -1,13 +1,21 @@
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QTextEdit, QFileDialog,
     QToolBar, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout,
-    QWidget, QPushButton, QFrame
+    QWidget, QPushButton, QFrame, QMessageBox
 )
 from PyQt6.QtGui import QAction, QDoubleValidator
 from PyQt6.QtCore import Qt
 
 from mutagen.oggvorbis import OggVorbis
 import codegen
+
+ABOUT = """<p>The <b>Crystalled Bullets PyQt Dialogue Manager</b> is a Python and Qt based application, intent to assist development of the game.<br>
+While its intent to used on Crystalled Bullets' development, feel free to use it on your ZDoom-based project.<br><br>
+
+If you have encountered any trouble, please contact to DeadRuins(https://deadruins.github.io/).<br>
+Preferably submit issues on GitHub.
+
+"""
 
 
 class DialogueEditor(QMainWindow):
@@ -43,9 +51,18 @@ class DialogueEditor(QMainWindow):
 
         # Duration Input
         self.time_input = QLineEdit()
-        self.time_input.setPlaceholderText("Seconds (e.g. 1.5)")
+        self.time_input.setPlaceholderText("e.g. 1.5[seconds]")
         self.time_input.setValidator(QDoubleValidator(0.0, 999.0, 2))
         self.time_input.setFixedWidth(120)
+
+        # Mouth Moving Frame Lists Input
+        self.mouthmove_input = QLineEdit()
+        self.mouthmove_input.setPlaceholderText("e.g. 0.3, 0.7 (...)")
+        self.mouthmove_input.setFixedWidth(200)
+
+        # Goto Input
+        self.goto_input = QLineEdit()
+        self.goto_input.setPlaceholderText("Goto Label (e.g. Dialogue2)")
 
         # Frame Name
         self.frame_input = QLineEdit()
@@ -60,9 +77,16 @@ class DialogueEditor(QMainWindow):
         self.bframe_input.setPlaceholderText(" ")
         self.bframe_input.setFixedWidth(30)
 
-        # Goto Input
-        self.goto_input = QLineEdit()
-        self.goto_input.setPlaceholderText("Goto Label (e.g. Dialogue)")
+        #For MouthOpen (and Eye opened as well)
+        self.oframe_input = QLineEdit()
+        self.oframe_input.setPlaceholderText(" ")
+        self.oframe_input.setFixedWidth(30)
+
+        #For MouthOpen as well as eyes closed as well
+        self.obframe_input = QLineEdit()
+        self.obframe_input.setPlaceholderText(" ")
+        self.obframe_input.setFixedWidth(30)
+
 
         # Action Button
         gen_button = QPushButton("Generate to Textbox and Copy it to Clipboard")
@@ -83,16 +107,26 @@ class DialogueEditor(QMainWindow):
         frame_row.addWidget(self.bframe_input)
         gen_layout.addLayout(frame_row)
 
+        # --- ROW 2: Sprites Frame Part 2 ---
+        frame_row2 = QHBoxLayout()
+        frame_row2.addWidget(QLabel("Open mouth frame with eyes opened:"))
+        frame_row2.addWidget(self.oframe_input)
+        frame_row2.addWidget(QLabel("Open mouth frame with eyes closed:"))
+        frame_row2.addWidget(self.obframe_input)
+        gen_layout.addLayout(frame_row2)
+
         # --- THE HORIZONTAL SEPARATOR ---
         line = QFrame()
         line.setFrameShape(QFrame.Shape.HLine) # Horizontal Line
         line.setFrameShadow(QFrame.Shadow.Sunken)
         gen_layout.addWidget(line)
 
-        # --- ROW 2: SECONDS ---
+        # --- ROW 3: SECONDS ---
         seconds_row = QHBoxLayout()
         seconds_row.addWidget(QLabel("Seconds:"))
         seconds_row.addWidget(self.time_input)
+        seconds_row.addWidget(QLabel("Mouth Movements:"))
+        seconds_row.addWidget(self.mouthmove_input)
         seconds_row.addWidget(QLabel("Target Label:"))
         seconds_row.addWidget(self.goto_input)
         gen_layout.addLayout(seconds_row)
@@ -118,8 +152,12 @@ class DialogueEditor(QMainWindow):
         loadaudio_action.triggered.connect(self.load_audio)
         file_toolbar.addAction(loadaudio_action)
 
+    def _about(self):
+        QMessageBox.about(self, "About", ABOUT)
+
     def create_menu(self):
         file_menu = self.menuBar().addMenu("&File")
+        help_menu = self.menuBar().addMenu("&Help")
 
         new_action = QAction("New Document", self)
         new_action.setShortcut("Ctrl+N")
@@ -140,6 +178,11 @@ class DialogueEditor(QMainWindow):
         exit_action.setShortcut("Ctrl+Q")
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
+
+        about_act = help_menu.addAction("&About")
+        about_act.triggered.connect(self._about)
+
+
 
     def open_file(self):
         filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "ZScript/Text (*.txt *.zsc);;All Files (*)")
@@ -181,14 +224,22 @@ class DialogueEditor(QMainWindow):
             try:
                 # Gather data from GUI
                 f_label = self.frame_input.text() or "TNT1"
+                n_frame = self.nframe_input.text() or "A"
+                b_frame = self.bframe_input.text() or n_frame
+                oeframe = self.oframe_input.text() or n_frame
+                obframe = self.obframe_input.text() or b_frame
                 target = self.goto_input.text()
                 secs = self.time_input.text()
+                mouthmove = self.mouthmove_input.text()
+
 
                 if not target or not secs:
+                    self.status_label.setText(f"Error: Fill the Goto Target and Seconds!")
+                    print(f"Error: Fill the Goto Target and Seconds!")
                     return
 
                 # Call the Logic
-                script = codegen.generate_zscript(f_label, "A", "B", target, secs)
+                script = codegen.generate_zscript(f_label, n_frame, b_frame, oeframe, obframe, target, secs, mouthmove)
 
                 # Update GUI
                 self.textEdit.insertPlainText(script)
