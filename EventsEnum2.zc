@@ -1,0 +1,58 @@
+extend class EventsMother
+{
+
+	//Changes character portrait of following emotions.
+	/*
+	Side Note: I tried to implement enum function, two days of trying, I gave up. Maybe I'll tackle them someday.
+	I know this is redundunt, and piles up tech debt, but I'm a subpar programmer, and I barely understand basics of C, and ZScript is quite different enough to make my job difficult, how nuts is that?
+	
+	Also, yes, I tried this with Switch statement instead of If statement. ZScript doesn't support switch statement with string. I just tried. didn't worked. maybe I 
+	*/
+	int pesudo_enum_CharacterFacial(string input)
+	{
+	if(input == "Very_Angry"){return 1;}
+	if(input == "Wondering"){return 2;}
+	if(input == "Deep_Sigh"){return 3;}
+	if(input == "Mildly_Suprised"){return 4;}
+	if(input == "Mildly_Worried"){return 5;}
+	if(input == "Very_Scared"){return 6;}
+	if(input == "Very_Tired"){return 7;}
+	if(input == "Suprised"){return 8;}
+	if(input == "Confused"){return 9;}
+	if(input == "Cryingly_Yelling"){return 10;}
+	if(input == "Closed_Crying"){return 11;}
+	if(input == "Worried"){return 12;}
+	if(input == "Mildly_Admired"){return 13;}
+	if(input == "Smug"){return 14;}
+	if(input == "Sympasized_Smile"){return 15;}
+	if(input == "Casual_Talk"){return 16;}
+	if(input == "Wink"){return 17;}
+
+	if(input == "Killing_Face"){return 99;}
+	
+	return 0;
+	}
+	
+	enum enum_int_CharacterFacial: int //Maybe I'll use this one someday... once I somehow figured out how to use enum...
+	{
+	Very_Angry = 1,
+	Wondering = 2,
+	Deep_Sigh = 3,
+	Mildly_Suprised = 4,
+	Mildly_Worried = 5,
+	Very_Scared = 6,
+	Very_Tired = 7,
+	Suprised = 8,
+	Confused = 9,
+	Cryingly_Yelling = 10,
+	Closed_Crying = 11,
+	Worried = 12,
+	Mildly_Admired = 13,
+	Smug = 14,
+	Sympasized_Smile = 15,
+	Casual_Talk = 16,
+	Wink = 17,
+	
+	Killing_Face = 99,
+	};
+}

@@ -1,0 +1,32 @@
+extend class EventsMother
+{
+//Portrait for Character name.
+
+	int pesudo_enum_PortaitCharacter(string input)
+	{
+		if(input == "Villy"){return 1;}
+		if(input == "Crocca"){return 2;}
+
+		if(input == "Yana"){return 10;}
+		if(input == "Beredina"){return 11;}
+		
+		if(input == "CaveWorker"){return 98;}
+		if(input == "QuestionMarks"){return 99;}
+		
+		return 0;
+	}
+
+//wanted to make it enum, just gave up.
+enum enum_int_PortaitCharacter: int
+	{
+		Villy = 1,
+		Crocca = 2,
+		
+		Yana = 10,
+		Beredina = 11,
+
+		//thus far, numbers below down there lacks Portraits. no need to define PortAmount2.
+		CaveWorker = 98,
+		QuestionMarks = 99,
+	};
+}
