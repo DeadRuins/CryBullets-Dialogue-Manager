@@ -16,11 +16,11 @@ def analyze_voice_segments(audio_file_path):
         y = samples / 32768.0
 
         # 2. Energy-based Activity Detection
-        window_size = int(sr * 0.0001) # 50ms windows
+        window_size = int(sr * 0.0001) # 0.1ms windows
         energy = np.array([np.sqrt(np.mean(y[i:i+window_size]**2)) for i in range(0, len(y), window_size)])
 
         # Sensitivity: lower threshold (e.g., 0.01) finds quieter sounds
-        threshold = 0.3 # db
+        threshold = 0.3 # 0.3 db
         is_active = (energy > threshold).astype(int)
 
         # 3. Find Contiguous Clusters (Grouping the 1s)
