@@ -28,7 +28,9 @@ Contributions are welcome! If you have ideas or improvements, feel free to fork 
 ## Tech Stacks
 - Python (obviously)
 - ffmpeg
-Section below are Python packages. Please install them via "pip" for Windows, or your Linux distro package managers. (I use Arch Linux, thus please use pacman package manager to do that.)
+  
+Packages below are Python packages. Please install them via "pip" for Windows, or your Linux distro package managers. (I use Arch Linux, thus please use pacman and AUR package manager to do that.)
+
 - PyQt6
 - Mutagen
 - NumPy
