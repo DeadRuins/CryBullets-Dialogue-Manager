@@ -8,6 +8,7 @@ from PyQt6.QtCore import Qt
 
 from mutagen.oggvorbis import OggVorbis
 import codegen
+import audio_analyze
 
 ABOUT = """<p>The <b>Crystalled Bullets PyQt Dialogue Manager</b> is a Python and Qt based application, intent to assist development of the game.<br>
 While its intent to used on Crystalled Bullets' development, feel free to use it on your ZDoom-based project.<br><br>
@@ -203,6 +204,7 @@ class DialogueEditor(QMainWindow):
                 audio = OggVorbis(audio_filepath)
                 duration = float(audio.info.length)
                 self.time_input.setText(f"{duration:.2f}")
+                audio_analyze.analyze_voice_segments(audio_filepath)
         except Exception as e:
             print(f"Error reading audio: {e}")
             self.status_label.setText(f"Error: {str(e)}")
