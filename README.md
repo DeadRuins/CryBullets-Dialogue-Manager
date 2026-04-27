@@ -27,11 +27,16 @@ Contributions are welcome! If you have ideas or improvements, feel free to fork 
 
 ## Tech Stacks
 - Python (obviously)
+- ffmpeg
+Section below are Python packages. Please install them via "pip" for Windows, or your Linux distro package managers. (I use Arch Linux, thus please use pacman package manager to do that.)
 - PyQt6
 - Mutagen
+- NumPy
+- pydub
+- SciPy
 
-If you want run this application on your system, please install the required dependency on pip or your Linux package manager, such as pacman or AUR.
-Currently, only Linux is supported. And I have no idea how to run it on Windows machines.
+If you want run this application on your system, please install the required dependencies.
+Currently, only Linux is supported. And since It's generic Python app, it should have works with Windows, but I have no idea how to run it on Windows machines. Due to lack of experience with Python and Windows.
 
 ## Licences
 
