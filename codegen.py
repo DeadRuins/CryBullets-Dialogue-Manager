@@ -2,17 +2,19 @@ def calculate_tics(seconds):
     """Converts seconds to ZDoom tics (35 tics per second)."""
     return int(float(seconds) * 35)
 
-def generate_zscript(frame_label, normal_frame, blink_frame, openmouth_frame, openmouth_eyeclosed_frame, goto_label, seconds, mouth_input_string):
+def generate_zscript(frame_label, normal_frame, blink_frame, openmouth_frame, openmouth_eyeclosed_frame, goto_label, seconds, mouth_input_string, mouth_input_string_unperiodic):
     """Pure logic to build the script string."""
     mouth_times = parse_mouth_list(mouth_input_string)
+    mouth_times_unperiodic = parse_mouth_list(mouth_input_string_unperiodic)
     mouth_tics = [int(t * 35) for t in mouth_times]
+    mouth_tics_unperiodic = [int(t * 35) for t in mouth_times_unperiodic]
     IsSpeaking = False
+    IsSpeaking_unperiodic = False
 
     print(mouth_tics)
 
     count = calculate_tics(seconds)
     lines = []
-    zscript_func = "CB_DialogueSkipPrevent;"
 
     if(len(frame_label) != 4):
         raise ValueError("frame_label needs to be 4 letter long!")
@@ -20,11 +22,10 @@ def generate_zscript(frame_label, normal_frame, blink_frame, openmouth_frame, op
 
     # Lead-in
     lines.append(f'TNT1 A 0 CB_SpeakDialogue(#DialogueNumber1, #DialogueNumber2, "Villy", "Very_Angry" );')
+    #lines.append(f'{frame_label} {normal_frame} 9 CB_DialogueSkipPrevent;')
+    #lines.append(f'{frame_label} {normal_frame} 1 CB_DialogueSkipPrevent;')
 
-    #lines.append(f'{frame_label} {normal_frame} 9 {zscript_func}')
-    #lines.append(f'{frame_label} {normal_frame} 1 {zscript_func}')
-
-    # Main Loop, if something complex animation such as lipsync gets neccearly.
+    # Main Loop
     for i in range(0, count):
         if(i > 10):
             zscript_func = f'A_JumpIfInTargetInventory("SkipDialogue", 1, "{goto_label}");'
@@ -33,9 +34,16 @@ def generate_zscript(frame_label, normal_frame, blink_frame, openmouth_frame, op
 
         if i in mouth_tics:
             IsSpeaking = not IsSpeaking
+            print(IsSpeaking)
+
+        if i in mouth_tics_unperiodic:
+            IsSpeaking_unperiodic = not IsSpeaking_unperiodic
+            print(IsSpeaking_unperiodic)
 
         if IsSpeaking:
             current_frame = blink_frame_func(i, openmouth_frame, openmouth_eyeclosed_frame) if (i % 8 < 4) else blink_frame_func(i, normal_frame, blink_frame)
+        elif IsSpeaking_unperiodic:
+            current_frame = openmouth_eyeclosed_frame
         else:
             current_frame = blink_frame_func(i, normal_frame, blink_frame)
 

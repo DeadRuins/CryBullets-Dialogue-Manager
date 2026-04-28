@@ -56,10 +56,13 @@ class DialogueEditor(QMainWindow):
         self.time_input.setValidator(QDoubleValidator(0.0, 999.0, 2))
         self.time_input.setFixedWidth(120)
 
-        # Mouth Moving Frame Lists Input
+        # Mouth Moving Frame Lists Input1
         self.mouthmove_input = QLineEdit()
-        self.mouthmove_input.setPlaceholderText("e.g. 0.3, 0.7 (...)")
-        self.mouthmove_input.setFixedWidth(200)
+        self.mouthmove_input.setPlaceholderText("e.g. 0.3, 0.7, 1.2 (...)")
+
+        # Mouth Moving Frame Lists Input2, Unperiodic
+        self.mouthmove_input2 = QLineEdit()
+        self.mouthmove_input2.setPlaceholderText("e.g. 0.3, 0.7, 1.2 (...)")
 
         # Goto Input
         self.goto_input = QLineEdit()
@@ -126,11 +129,20 @@ class DialogueEditor(QMainWindow):
         seconds_row = QHBoxLayout()
         seconds_row.addWidget(QLabel("Seconds:"))
         seconds_row.addWidget(self.time_input)
-        seconds_row.addWidget(QLabel("Mouth Movements:"))
-        seconds_row.addWidget(self.mouthmove_input)
         seconds_row.addWidget(QLabel("Target Label:"))
         seconds_row.addWidget(self.goto_input)
         gen_layout.addLayout(seconds_row)
+
+        # --- ROW 4 & 5: Speaking Seconds ---
+        speaking_row = QHBoxLayout()
+        speaking_row.addWidget(QLabel("Mouth Movements (Standard):   "))
+        speaking_row.addWidget(self.mouthmove_input)
+        gen_layout.addLayout(speaking_row)
+        speaking_row2 = QHBoxLayout()
+        speaking_row2.addWidget(QLabel("Mouth Movements (Unperiodic):"))
+        speaking_row2.addWidget(self.mouthmove_input2)
+        gen_layout.addLayout(speaking_row2)
+
 
         # --- THE REST ---
         gen_layout.addWidget(gen_button)
@@ -203,9 +215,10 @@ class DialogueEditor(QMainWindow):
             if audio_filepath:
                 audio = OggVorbis(audio_filepath)
                 duration = float(audio.info.length)
-                speak_list = audio_analyze.analyze_voice_segments(audio_filepath)
+                speak_list, unperiodic_list = audio_analyze.analyze_voice_segments(audio_filepath)
 
                 self.mouthmove_input.setText(speak_list)
+                self.mouthmove_input2.setText(unperiodic_list)
                 self.time_input.setText(f"{duration:.2f}")
         except Exception as e:
             print(f"Error reading audio: {e}")
@@ -235,6 +248,7 @@ class DialogueEditor(QMainWindow):
                 target = self.goto_input.text()
                 secs = self.time_input.text()
                 mouthmove = self.mouthmove_input.text()
+                mouthmove_unperiodic = self.mouthmove_input2.text()
 
 
                 if not target or not secs:
@@ -243,7 +257,7 @@ class DialogueEditor(QMainWindow):
                     return
 
                 # Call the Logic
-                script = codegen.generate_zscript(f_label, n_frame, b_frame, oeframe, obframe, target, secs, mouthmove)
+                script = codegen.generate_zscript(f_label, n_frame, b_frame, oeframe, obframe, target, secs, mouthmove, mouthmove_unperiodic)
 
                 # Update GUI
                 self.textEdit.insertPlainText(script)

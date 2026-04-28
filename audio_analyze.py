@@ -12,6 +12,7 @@ def analyze_voice_segments(audio_file_path):
     try:
         # 0. Defining the list
         lists = []
+        lists_unperiodic = []
 
         # 1. Load and Normalize
         sound = AudioSegment.from_file(audio_file_path).set_channels(1).set_frame_rate(22050)
@@ -82,15 +83,21 @@ def analyze_voice_segments(audio_file_path):
 
             #Final Steps. Showing the seconds in Terminal, as well as add the start_sec, end_sec onto list.
             print(f"[{i+1}] {start_sec:.2f}s - {end_sec:.2f}s")
-            lists.append(f"{start_sec:.2f}")
-            lists.append(f"{end_sec:.2f}")
+            if(label == "Standard Speech/Noise"):
+                lists.append(f"{start_sec:.2f}")
+                lists.append(f"{end_sec:.2f}")
+            elif(label == "High-Freq/Breathy (Unperiodic. Likely Screaming)"):
+                lists_unperiodic.append(f"{start_sec:.2f}")
+                lists_unperiodic.append(f"{end_sec:.2f}")
             print(f"    ZCR: {zcr:.4f} | Periodicity: {periodicity_score}")
             print(f"    Result: {label}")
             print("-" * 20)
 
-        print(lists)
+        print(f"Standard Speech: {lists}")
+        print(f"Unperiodic Speech: {lists_unperiodic}")
         list_to_return = list_to_string_list(lists)
-        return list_to_return
+        lists_to_return_unperiodic = list_to_string_list(lists_unperiodic)
+        return list_to_return, lists_to_return_unperiodic
 
     except Exception as e:
         print(f"Error: {e}")
