@@ -203,8 +203,10 @@ class DialogueEditor(QMainWindow):
             if audio_filepath:
                 audio = OggVorbis(audio_filepath)
                 duration = float(audio.info.length)
+                speak_list = audio_analyze.analyze_voice_segments(audio_filepath)
+
+                self.mouthmove_input.setText(speak_list)
                 self.time_input.setText(f"{duration:.2f}")
-                audio_analyze.analyze_voice_segments(audio_filepath)
         except Exception as e:
             print(f"Error reading audio: {e}")
             self.status_label.setText(f"Error: {str(e)}")
