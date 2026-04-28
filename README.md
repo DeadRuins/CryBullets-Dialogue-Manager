@@ -6,6 +6,8 @@ Written in PyQt6.
 # Screenshots
 
 ![Screenshots](screenshots/スクリーンショット_20260321_161949.png) 
+Note: The GUI of application screen shot is now very outdated. By the time I finishes the app to be anywhere useable, then I can finally update it.
+
 ![Screenshots](screenshots/in-game-shot.webp) 
 
 ## Features
