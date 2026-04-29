@@ -16,12 +16,14 @@ Note: The GUI of application screen shot is now very outdated. By the time I fin
 - Small Text Editor jointed on bottom.
 - Skippable Text by Jump Button.
 - Generates blink animation (optional, only if entered blink animation frame.)
-- Generates Lip Sync Animation (again, optional. only if you entered open mouth animation)
+- Generates Lip Sync Animation when user loaded audio file.
+- Detection of audio where voice actor is screaming or speaking normally via Unperiodic movement of the wave
 
 ## ToDo
 
-- Support for automatic assign on lipsync which audio file user loaded.
 - GUI Editor for "TNT1 A 0 CB_SpeakDialogue"
+- Support other audio format other than .ogg. such as .mp3 or .wav
+- Rewritten of audio file analysis program to be ran on C/C++ for better peformance. (Not so high priority)
 
 ## Contributing
 
@@ -30,7 +32,9 @@ Contributions are welcome! If you have ideas or improvements, feel free to fork 
 ## Tech Stacks
 - Python (obviously)
 - ffmpeg
-  
+- The framewrok to run Qt application
+
+The very last one should be pre-installed on your Linux distro or Arch user using KDE Plasma.
 Packages below are Python packages. Please install them via "pip" for Windows, or your Linux distro package managers. (I use Arch Linux, thus please use pacman and AUR package manager to do that.)
 
 - PyQt6
