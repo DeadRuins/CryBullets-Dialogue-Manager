@@ -64,6 +64,17 @@ class DialogueEditor(QMainWindow):
         self.mouthmove_input2 = QLineEdit()
         self.mouthmove_input2.setPlaceholderText("e.g. 0.3, 0.7, 1.2 (...)")
 
+        # variables for audio analysis (analyze_var_row)
+        self.threshold_input = QLineEdit()
+        self.threshold_input.setPlaceholderText("[db]")
+        self.threshold_input.setText("0.3")
+        self.threshold_input.setFixedWidth(150)
+
+        self.window_input = QLineEdit()
+        self.window_input.setPlaceholderText("[milliseconds]")
+        self.window_input.setText("0.05")
+        self.window_input.setFixedWidth(150)
+
         # Goto Input
         self.goto_input = QLineEdit()
         self.goto_input.setPlaceholderText("Goto Label (e.g. Dialogue2)")
@@ -133,7 +144,14 @@ class DialogueEditor(QMainWindow):
         seconds_row.addWidget(self.goto_input)
         gen_layout.addLayout(seconds_row)
 
-        # --- ROW 4 & 5: Speaking Seconds ---
+        # --- ROW 4 & 5 & 6: Speaking Seconds ---
+        analyze_var_row = QHBoxLayout()
+        analyze_var_row.addWidget(QLabel("Audio Threshold [db (decibel)]:"))
+        analyze_var_row.addWidget(self.threshold_input)
+        analyze_var_row.addWidget(QLabel("Audio Window [milliseconds]:"))
+        analyze_var_row.addWidget(self.window_input)
+        gen_layout.addLayout(analyze_var_row)
+
         speaking_row = QHBoxLayout()
         speaking_row.addWidget(QLabel("Mouth Movements (Standard):   "))
         speaking_row.addWidget(self.mouthmove_input)
@@ -210,16 +228,21 @@ class DialogueEditor(QMainWindow):
                 f.write(self.textEdit.toPlainText())
 
     def load_audio(self):
+        self.status_label.setText("Audio analysis for generating lip-sync animation can take times. Please wait!")
         audio_filepath, _ = QFileDialog.getOpenFileName(self, "Open File", "", "Ogg Audio File(ogg)(*.ogg);;All Audio Files(mp3, wav, ogg, flac) (*.mp3 *.wav *.ogg *.flac);;All Files (*)")
         try:
             if audio_filepath:
                 audio = OggVorbis(audio_filepath)
                 duration = float(audio.info.length)
-                speak_list, unperiodic_list = audio_analyze.analyze_voice_segments(audio_filepath)
+                threshold = float(self.threshold_input.text())
+                window = float(self.window_input.text()) * 0.001
+
+                speak_list, unperiodic_list = audio_analyze.analyze_voice_segments(audio_filepath, threshold, window)
 
                 self.mouthmove_input.setText(speak_list)
                 self.mouthmove_input2.setText(unperiodic_list)
                 self.time_input.setText(f"{duration:.2f}")
+                self.status_label.setText("Audio analysis done!")
         except Exception as e:
             print(f"Error reading audio: {e}")
             self.status_label.setText(f"Error: {str(e)}")

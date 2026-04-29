@@ -41,7 +41,7 @@ def generate_zscript(frame_label, normal_frame, blink_frame, openmouth_frame, op
             print(IsSpeaking_unperiodic)
 
         if IsSpeaking:
-            current_frame = blink_frame_func(i, openmouth_frame, openmouth_eyeclosed_frame) if (i % 8 < 4) else blink_frame_func(i, normal_frame, blink_frame)
+            current_frame = blink_frame_func(i, openmouth_frame, openmouth_eyeclosed_frame) if (i % 16 < 8) else openmouth_eyeclosed_frame
         elif IsSpeaking_unperiodic:
             current_frame = openmouth_eyeclosed_frame
         else:

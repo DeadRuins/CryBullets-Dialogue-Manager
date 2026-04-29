@@ -8,7 +8,7 @@ from pydub.silence import detect_nonsilent
 #While I say its tolorable running with shorter dialogue and/or running with powerful CPUs, but nature of Python, this part of code can get really slow sometimes, thus I should consider rewriting this bit with C/C++ someday.
 
 
-def analyze_voice_segments(audio_file_path):
+def analyze_voice_segments(audio_file_path, input_threshold, window_size):
     try:
         # 0. Defining the list
         lists = []
@@ -21,12 +21,12 @@ def analyze_voice_segments(audio_file_path):
         y = samples / 32768.0
 
         # 2. Energy-based Activity Detection
-        window_size = int(sr * 0.0001) # 0.1ms windows
+        window_size = int(sr * window_size) # 0.1ms windows
         energy = np.array([np.sqrt(np.mean(y[i:i+window_size]**2)) for i in range(0, len(y), window_size)])
 
         # Sensitivity: lower threshold (e.g., 0.01) finds quieter sounds
         threshold = 0.3 # 0.3 db
-        is_active = (energy > threshold).astype(int)
+        is_active = (energy > input_threshold).astype(int)
 
         # 3. Find Contiguous Clusters (Grouping the 1s)
         # We look for where the activity status changes
