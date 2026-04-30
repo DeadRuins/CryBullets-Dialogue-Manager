@@ -4,11 +4,11 @@ from pydub import AudioSegment
 from scipy.signal import find_peaks, welch
 from pydub.silence import detect_nonsilent
 
-#I did tried to use Librosa, but maybe because Arch Linux's package issue, it didn't worked out on my system. so decided resort on something else.
-#While I say its tolorable running with shorter dialogue and/or running with powerful CPUs, but nature of Python, this part of code can get really slow sometimes, thus I should consider rewriting this bit with C/C++ someday.
+# I did tried to use Librosa, but maybe because Arch Linux's package issue, it didn't worked out on my system. so decided resort on something else.
+# While I say its tolorable running with shorter dialogue and/or running with powerful CPUs, but nature of Python, as well as this process only uses single-core out of CPUs, this part of code can get really slow sometimes, thus I should consider rewriting this bit with C/C++ someday.
+# ... or, making it do multi-processing. either way, I know nothing about how to to Digital Signal Processing on C, nor How to write program with multi processing in general, It's gonna be hard.
 
-
-def analyze_voice_segments(audio_file_path, input_threshold, window_size):
+def analyze_voice_segments(audio_file_path, input_threshold, input_window_size):
     try:
         # 0. Defining the list
         lists = []
@@ -21,7 +21,7 @@ def analyze_voice_segments(audio_file_path, input_threshold, window_size):
         y = samples / 32768.0
 
         # 2. Energy-based Activity Detection
-        window_size = int(sr * window_size) # 0.1ms windows
+        window_size = int(sr * input_window_size) # 0.1ms windows
         energy = np.array([np.sqrt(np.mean(y[i:i+window_size]**2)) for i in range(0, len(y), window_size)])
 
         # Sensitivity: lower threshold (e.g., 0.01) finds quieter sounds
