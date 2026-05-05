@@ -296,6 +296,9 @@ class DialogueEditor(QMainWindow):
                     print(f"Error: Fill the Goto Target and Seconds!")
                     return
 
+                script = codegen.cb_speakdialogue(1, 1, "Villy", "Very_Angry")
+                self.textEdit.insertPlainText(script)
+
                 # Call the Logic
                 script = codegen.generate_zscript(f_label, n_frame, b_frame, oeframe, obframe, target, secs, mouthmove, mouthmove_unperiodic)
 

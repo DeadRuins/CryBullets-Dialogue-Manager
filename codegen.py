@@ -2,16 +2,19 @@ def calculate_tics(seconds):
     """Converts seconds to ZDoom tics (35 tics per second)."""
     return int(float(seconds) * 35)
 
-def generate_zscript(frame_label, normal_frame, blink_frame, openmouth_frame, openmouth_eyeclosed_frame, goto_label, seconds, mouth_input_string, mouth_input_string_unperiodic):
+def generate_zscript(frame_label, normal_frame, blink_frame, openmouth_frame, fullyopen_eyeopen_frame, goto_label, seconds, mouth_input_string, mouth_input_string_unperiodic):
     """Pure logic to build the script string."""
-    mouth_times = parse_mouth_list(mouth_input_string)
+    mouth_times = decrease_even(parse_mouth_list(mouth_input_string))
     mouth_times_unperiodic = parse_mouth_list(mouth_input_string_unperiodic)
     mouth_tics = [int(t * 35) for t in mouth_times]
     mouth_tics_unperiodic = [int(t * 35) for t in mouth_times_unperiodic]
     IsSpeaking = False
     IsSpeaking_unperiodic = False
+    i2 = 0
+    i3 = 0
 
-    print(mouth_tics)
+    print(f'mouth_tics = {mouth_tics}')
+    print(f'mouth_times = {mouth_times}')
 
     count = calculate_tics(seconds)
     lines = []
@@ -21,7 +24,7 @@ def generate_zscript(frame_label, normal_frame, blink_frame, openmouth_frame, op
         return
 
     # Lead-in
-    lines.append(f'TNT1 A 0 CB_SpeakDialogue(#DialogueNumber1, #DialogueNumber2, "Villy", "Very_Angry" );')
+    #lines.append(f'TNT1 A 0 CB_SpeakDialogue(#DialogueNumber1, #DialogueNumber2, "Villy", "Very_Angry" );')
     #lines.append(f'{frame_label} {normal_frame} 9 CB_DialogueSkipPrevent;')
     #lines.append(f'{frame_label} {normal_frame} 1 CB_DialogueSkipPrevent;')
 
@@ -32,26 +35,45 @@ def generate_zscript(frame_label, normal_frame, blink_frame, openmouth_frame, op
         else:
             zscript_func = "CB_DialogueSkipPrevent;"
 
+
+        # Speak Logic's Switches
         if i in mouth_tics:
             IsSpeaking = not IsSpeaking
             print(IsSpeaking)
-
+            if IsSpeaking == False:
+                i2 = 3
+                print("i2 = 3")
         if i in mouth_tics_unperiodic:
             IsSpeaking_unperiodic = not IsSpeaking_unperiodic
             print(IsSpeaking_unperiodic)
+            if IsSpeaking == False:
+                i3 = 1
+                print("i3 = 1")
+
 
         if IsSpeaking:
-            current_frame = blink_frame_func(i, openmouth_frame, openmouth_eyeclosed_frame) if (i % 16 < 8) else openmouth_eyeclosed_frame
+            current_frame = blink_frame_func(i, openmouth_frame, fullyopen_eyeopen_frame) if (i % 16 < 8) else fullyopen_eyeopen_frame
         elif IsSpeaking_unperiodic:
-            current_frame = openmouth_eyeclosed_frame
+            current_frame = fullyopen_eyeopen_frame
         else:
-            current_frame = blink_frame_func(i, normal_frame, blink_frame)
+            if i2 > 0:
+                current_frame = blink_frame_func(i, openmouth_frame, openmouth_frame)
+            elif i3 > 0:
+                current_frame = blink_frame_func(i, openmouth_frame, openmouth_frame)
+            else:
+                current_frame = blink_frame_func(i, normal_frame, blink_frame)
 
+        i2 -= 1
+        i3 -= 1
         command = f'{frame_label} {current_frame} 1 {zscript_func}'
         lines.append(command)
 
     lines.append(f"\n{goto_label}:")
     return "\n".join(lines)
+
+def cb_speakdialogue(DialogueNumber1, DialogueNumber2, CharacterName, Facial):
+    return f'TNT1 A 0 CB_SpeakDialogue(#DialogueNumber1, #DialogueNumber2, "Villy", "Very_Angry" );\n'
+
 
 def parse_mouth_list(input_string):
     """Converts '0.3, 0.7, 1.2' into [0.3, 0.7, 1.2]"""
@@ -59,9 +81,6 @@ def parse_mouth_list(input_string):
         return []
 
     try:
-        # 1. Replace commas with spaces so we have one consistent separator
-        # 2. Split by whitespace
-        # 3. Convert every valid chunk into a float
         raw_list = input_string.replace(',', ' ').split()
         return [float(x) for x in raw_list]
     except ValueError:
@@ -72,3 +91,14 @@ def blink_frame_func(i, normal_frame, blink_frame):
         return blink_frame
     else:
         return normal_frame
+
+def decrease_even(input_list):
+    """Converts　[0.3, 0.7, 1.2]  into [0.3, 0.6, 1.2]"""
+
+    try:
+        for i in range(0, len(input_list)):
+            if i % 2 == 1:
+                input_list[i] = input_list[i] - 0.08
+        return input_list
+    except ValueError:
+        raise ValueError("Process at decrease_even on codegen.py failed!")
