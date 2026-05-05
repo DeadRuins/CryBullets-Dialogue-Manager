@@ -92,16 +92,25 @@ class DialogueEditor(QMainWindow):
         self.bframe_input.setPlaceholderText(" ")
         self.bframe_input.setFixedWidth(30)
 
-        #For MouthOpen (and Eye opened as well)
+        #For MouthOpen
         self.oframe_input = QLineEdit()
         self.oframe_input.setPlaceholderText(" ")
         self.oframe_input.setFixedWidth(30)
 
-        #For MouthOpen as well as eyes closed as well
+        #For MouthOpen, Larger
         self.obframe_input = QLineEdit()
         self.obframe_input.setPlaceholderText(" ")
         self.obframe_input.setFixedWidth(30)
 
+        #For MouthOpen - Blink
+        self.oc_frame_input = QLineEdit()
+        self.oc_frame_input.setPlaceholderText(" ")
+        self.oc_frame_input.setFixedWidth(30)
+
+        #For MouthOpen - Blink
+        self.obc_frame_input = QLineEdit()
+        self.obc_frame_input.setPlaceholderText(" ")
+        self.obc_frame_input.setFixedWidth(30)
 
         # Action Button
         gen_button = QPushButton("Generate to Textbox and Copy it to Clipboard")
@@ -124,11 +133,19 @@ class DialogueEditor(QMainWindow):
 
         # --- ROW 2: Sprites Frame Part 2 ---
         frame_row2 = QHBoxLayout()
-        frame_row2.addWidget(QLabel("Open mouth frame with eyes opened:"))
+        frame_row2.addWidget(QLabel("Open Mouth frame:"))
         frame_row2.addWidget(self.oframe_input)
-        frame_row2.addWidget(QLabel("Open mouth frame with eyes closed:"))
+        frame_row2.addWidget(QLabel("Larger Open Mouth frame:"))
         frame_row2.addWidget(self.obframe_input)
         gen_layout.addLayout(frame_row2)
+
+        # --- ROW 3: Sprites Frame Part 3 ---
+        frame_row3 = QHBoxLayout()
+        frame_row3.addWidget(QLabel("Open Mouth frame (Blink):"))
+        frame_row3.addWidget(self.oc_frame_input)
+        frame_row3.addWidget(QLabel("Larger Open Mouth frame (Blink):"))
+        frame_row3.addWidget(self.obc_frame_input)
+        gen_layout.addLayout(frame_row3)
 
         # --- THE HORIZONTAL SEPARATOR ---
         line = QFrame()
