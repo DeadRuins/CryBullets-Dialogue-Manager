@@ -72,7 +72,7 @@ def generate_zscript(frame_label, normal_frame, blink_frame, openmouth_frame, fu
     return "\n".join(lines)
 
 def cb_speakdialogue(DialogueNumber1, DialogueNumber2, CharacterName, Facial):
-    return f'TNT1 A 0 CB_SpeakDialogue(#DialogueNumber1, #DialogueNumber2, "Villy", "Very_Angry" );\n'
+    return f'TNT1 A 0 CB_SpeakDialogue({DialogueNumber1}, {DialogueNumber2}, "Villy", "Very_Angry" );\n'
 
 
 def parse_mouth_list(input_string):

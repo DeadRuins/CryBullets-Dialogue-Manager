@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import (
     QToolBar, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout,
     QWidget, QPushButton, QFrame, QMessageBox
 )
-from PyQt6.QtGui import QAction, QDoubleValidator
+from PyQt6.QtGui import QAction, QDoubleValidator, QIntValidator
 from PyQt6.QtCore import Qt
 
 from mutagen.oggvorbis import OggVorbis
@@ -24,7 +24,7 @@ class DialogueEditor(QMainWindow):
         super().__init__()
 
         # 1. Window Setup
-        self.resize(1000, 700)
+        self.resize(1000, 1000)
         self.setWindowTitle("CryBullets PyQt Dialogue Manager")
         self.setAcceptDrops(True)
 
@@ -49,6 +49,16 @@ class DialogueEditor(QMainWindow):
         separator.setFrameShape(QFrame.Shape.VLine)
         separator.setFrameShadow(QFrame.Shadow.Sunken)
         separator.setLineWidth(1)
+
+        # CB_SpeakDialgoue setups
+        self.dnumber1_input = QLineEdit()
+        self.dnumber1_input.setValidator(QIntValidator(0, 99))
+        self.dnumber1_input.setFixedWidth(60)
+
+        self.dnumber2_input = QLineEdit()
+        self.dnumber2_input.setValidator(QIntValidator(0, 99))
+        self.dnumber2_input.setFixedWidth(60)
+
 
         # Duration Input
         self.time_input = QLineEdit()
@@ -120,6 +130,19 @@ class DialogueEditor(QMainWindow):
         # Status Label
         self.status_label = QLabel("Ready")
 
+        # --- ROW 0: CB_SpeakDialgoue Setups ---
+        speakdialogue_row = QHBoxLayout()
+        speakdialogue_row.addWidget(QLabel("Dialogue Number 1:"))
+        speakdialogue_row.addWidget(self.dnumber1_input)
+        speakdialogue_row.addWidget(QLabel("Dialogue Number 2:"))
+        speakdialogue_row.addWidget(self.dnumber2_input)
+        gen_layout.addLayout(speakdialogue_row)
+
+        # --- THE HORIZONTAL SEPARATOR ---
+        line = QFrame()
+        line.setFrameShape(QFrame.Shape.HLine) # Horizontal Line
+        line.setFrameShadow(QFrame.Shadow.Sunken)
+        gen_layout.addWidget(line)
 
         # --- ROW 1: Sprite Frames ---
         frame_row = QHBoxLayout()
@@ -148,10 +171,10 @@ class DialogueEditor(QMainWindow):
         gen_layout.addLayout(frame_row3)
 
         # --- THE HORIZONTAL SEPARATOR ---
-        line = QFrame()
-        line.setFrameShape(QFrame.Shape.HLine) # Horizontal Line
-        line.setFrameShadow(QFrame.Shadow.Sunken)
-        gen_layout.addWidget(line)
+        line2 = QFrame()
+        line2.setFrameShape(QFrame.Shape.HLine) # Horizontal Line
+        line2.setFrameShadow(QFrame.Shadow.Sunken)
+        gen_layout.addWidget(line2)
 
         # --- ROW 3: SECONDS ---
         seconds_row = QHBoxLayout()
@@ -296,7 +319,7 @@ class DialogueEditor(QMainWindow):
                     print(f"Error: Fill the Goto Target and Seconds!")
                     return
 
-                script = codegen.cb_speakdialogue(1, 1, "Villy", "Very_Angry")
+                script = codegen.cb_speakdialogue(self.dnumber1_input.text(), self.dnumber2_input.text(), "Villy", "Very_Angry")
                 self.textEdit.insertPlainText(script)
 
                 # Call the Logic
