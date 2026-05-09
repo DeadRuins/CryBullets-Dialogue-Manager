@@ -22,8 +22,10 @@ Lip Sync Video Demo:
 
 ## ToDo
 
-- GUI Editor for "TNT1 A 0 CB_SpeakDialogue"
-- Support other audio format other than .ogg. such as .mp3 or .wav
+- Complete the GUI Editor for "TNT1 A 0 CB_SpeakDialogue"
+- Better lip sync algorithm accuracy (Currently often mispick ups, or forgotten to pick ups due to volume difference within the waves audio file itself.)
+
+- Support other audio format other than .ogg. such as .mp3 or .wav (Again, not so high priority.)
 - Rewritten of audio file analysis program to be ran on C/C++ for better peformance. (Not so high priority)
 
 ## Contributing
