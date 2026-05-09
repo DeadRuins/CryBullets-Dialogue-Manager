@@ -5,8 +5,8 @@ Written in PyQt6.
 
 # Screenshots
 
-![Screenshots](screenshots/スクリーンショット_20260321_161949.png) 
-Note: The GUI of application screen shot is now very outdated. By the time I finishes the app to be anywhere useable, then I can finally update it.
+![Screenshots](screenshots/GUI_Screenshot.webp) 
+Note: The app is active development. as such, this GUI of application screen shot can be outdated.
 
 Lip Sync Video Demo:
 [![Watch the video](https://github.com/DeadRuins/CryBullets-Dialogue-Manager/blob/main/screenshots/LipSyncDemoThumbnail.webp)](https://github.com/DeadRuins/CryBullets-Dialogue-Manager/blob/main/screenshots/LipSync%20Demo%20LQ.mp4)
