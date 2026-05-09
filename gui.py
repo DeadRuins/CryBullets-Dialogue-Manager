@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QTextEdit, QFileDialog,
     QToolBar, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout,
-    QWidget, QPushButton, QFrame, QMessageBox
+    QWidget, QPushButton, QFrame, QMessageBox, QCheckBox
 )
 from PyQt6.QtGui import QAction, QDoubleValidator, QIntValidator
 from PyQt6.QtCore import Qt
@@ -59,6 +59,7 @@ class DialogueEditor(QMainWindow):
         self.dnumber2_input.setValidator(QIntValidator(0, 99))
         self.dnumber2_input.setFixedWidth(60)
 
+        self.isplayer_input = QCheckBox('IsPlayer',self)
 
         # Duration Input
         self.time_input = QLineEdit()
@@ -136,6 +137,7 @@ class DialogueEditor(QMainWindow):
         speakdialogue_row.addWidget(self.dnumber1_input)
         speakdialogue_row.addWidget(QLabel("Dialogue Number 2:"))
         speakdialogue_row.addWidget(self.dnumber2_input)
+        speakdialogue_row.addWidget(self.isplayer_input)
         gen_layout.addLayout(speakdialogue_row)
 
         # --- THE HORIZONTAL SEPARATOR ---
@@ -312,6 +314,11 @@ class DialogueEditor(QMainWindow):
                 secs = self.time_input.text()
                 mouthmove = self.mouthmove_input.text()
                 mouthmove_unperiodic = self.mouthmove_input2.text()
+                isplayer = "false"
+
+                if self.isplayer_input.isChecked():
+                    print("isplayer_input is true")
+                    isplayer = "true"
 
 
                 if not target or not secs:
@@ -319,7 +326,7 @@ class DialogueEditor(QMainWindow):
                     print(f"Error: Fill the Goto Target and Seconds!")
                     return
 
-                script = codegen.cb_speakdialogue(self.dnumber1_input.text(), self.dnumber2_input.text(), "Villy", "Very_Angry")
+                script = codegen.cb_speakdialogue(self.dnumber1_input.text(), self.dnumber2_input.text(), "Villy", "Very_Angry", isplayer)
                 self.textEdit.insertPlainText(script)
 
                 # Call the Logic
