@@ -13,6 +13,7 @@ Lip Sync Video Demo:
 
 ## Features
 
+- GUI Editor for "CB_SpeakDialogue"
 - Generates appopriate ZScript depends on voice line's seconds length.
 - Small Text Editor jointed on bottom.
 - Skippable Text by Jump Button.
@@ -22,7 +23,6 @@ Lip Sync Video Demo:
 
 ## ToDo
 
-- Complete the GUI Editor for "TNT1 A 0 CB_SpeakDialogue"
 - Better lip sync algorithm accuracy: Currently often mispick ups, or forgotten to pick ups due to volume difference within the waves audio file itself.<br>
     → Fixing idea 1. Limit picking up a audio wave from 300-3400 [Hz] via High (and Low) Pass Filter.<br>
     → Fixing idea 2. does a little thing with increasing a volume of a whole sound when its not loud enough.<br>
