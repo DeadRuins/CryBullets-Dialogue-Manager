@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QTextEdit, QFileDialog,
     QToolBar, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout,
-    QWidget, QPushButton, QFrame, QMessageBox, QCheckBox
+    QWidget, QPushButton, QFrame, QMessageBox, QCheckBox, QComboBox
 )
 from PyQt6.QtGui import QAction, QDoubleValidator, QIntValidator
 from PyQt6.QtCore import Qt
@@ -9,6 +9,9 @@ from PyQt6.QtCore import Qt
 from mutagen.oggvorbis import OggVorbis
 import codegen
 import audio_analyze
+import re
+
+progress_automatically = True
 
 ABOUT = """<p>The <b>Crystalled Bullets PyQt Dialogue Manager</b> is a Python and Qt based application, intent to assist development of the game.<br>
 While its intent to used on Crystalled Bullets' development, feel free to use it on your ZDoom-based project.<br><br>
@@ -60,6 +63,14 @@ class DialogueEditor(QMainWindow):
         self.dnumber2_input.setFixedWidth(60)
 
         self.isplayer_input = QCheckBox('IsPlayer',self)
+
+        self.character_name = QComboBox()
+        self.character_name.addItems(codegen.get_return_strings("EventsEnum1.zc"))
+
+        self.character_facial = QComboBox()
+        self.character_facial.addItems(codegen.get_return_strings("EventsEnum2.zc"))
+
+        #self.character_facial = QComboBox()
 
         # Duration Input
         self.time_input = QLineEdit()
@@ -124,7 +135,7 @@ class DialogueEditor(QMainWindow):
         self.obc_frame_input.setFixedWidth(30)
 
         # Action Button
-        gen_button = QPushButton("Generate to Textbox and Copy it to Clipboard")
+        gen_button = QPushButton("Generate to Textbox") # I don't think that copy to the Textboard bit work anymore.
         gen_button.setStyleSheet("background-color: #2b5b84; color: white; font-weight: bold; padding: 5px;")
         gen_button.clicked.connect(self.handle_generation)
 
@@ -138,6 +149,10 @@ class DialogueEditor(QMainWindow):
         speakdialogue_row.addWidget(QLabel("Dialogue Number 2:"))
         speakdialogue_row.addWidget(self.dnumber2_input)
         speakdialogue_row.addWidget(self.isplayer_input)
+        speakdialogue_row.addWidget(QLabel("Character Name:"))
+        speakdialogue_row.addWidget(self.character_name)
+        speakdialogue_row.addWidget(QLabel("Facial State:"))
+        speakdialogue_row.addWidget(self.character_facial)
         gen_layout.addLayout(speakdialogue_row)
 
         # --- THE HORIZONTAL SEPARATOR ---
@@ -310,7 +325,10 @@ class DialogueEditor(QMainWindow):
                 b_frame = self.bframe_input.text() or n_frame
                 oeframe = self.oframe_input.text() or n_frame
                 obframe = self.obframe_input.text() or b_frame
-                target = self.goto_input.text()
+                if(progress_automatically):
+                    target = f"D{1 + int(self.dnumber2_input.text())}" #D stands for Dialouge
+                else:
+                    target = self.goto_input.text()
                 secs = self.time_input.text()
                 mouthmove = self.mouthmove_input.text()
                 mouthmove_unperiodic = self.mouthmove_input2.text()
@@ -326,7 +344,7 @@ class DialogueEditor(QMainWindow):
                     print(f"Error: Fill the Goto Target and Seconds!")
                     return
 
-                script = codegen.cb_speakdialogue(self.dnumber1_input.text(), self.dnumber2_input.text(), "Villy", "Very_Angry", isplayer)
+                script = codegen.cb_speakdialogue(self.dnumber1_input.text(), self.dnumber2_input.text(), self.character_name.currentText(), self.character_facial.currentText(), isplayer)
                 self.textEdit.insertPlainText(script)
 
                 # Call the Logic
