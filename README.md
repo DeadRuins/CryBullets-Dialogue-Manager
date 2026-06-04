@@ -40,7 +40,12 @@ Contributions are welcome! If you have ideas or improvements, feel free to fork 
 - The framewrok to run Qt application
 
 The very last one should be pre-installed on your Linux distro or Arch user using KDE Plasma.
-Packages below are Python packages. Please install them via "pip" for Windows, or your Linux distro package managers. (I use Arch Linux, thus please use pacman and AUR package manager to do that.)
+Packages below are Python packages. Please install them via "pip" for Windows, or your Linux distro package managers.<br> 
+For example, I use Arch Linux, thus use pacman and/or AUR package manager to install new packages via this command like this:
+
+```bash
+sudo pacman -S python-pyqt6 python-mutagen python-numpy python-pydub python-scipy ffmpeg
+```
 
 - PyQt6
 - Mutagen
