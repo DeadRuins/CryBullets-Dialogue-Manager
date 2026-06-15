@@ -293,13 +293,19 @@ class DialogueEditor(QMainWindow):
                 duration = float(audio.info.length)
                 threshold = float(self.threshold_input.text())
                 window = float(self.window_input.text()) * 0.001
-
-                speak_list, unperiodic_list = audio_analyze.analyze_voice_segments(audio_filepath, threshold, window)
-
-                self.mouthmove_input.setText(speak_list)
-                self.mouthmove_input2.setText(unperiodic_list)
                 self.time_input.setText(f"{duration:.2f}")
-                self.status_label.setText("Audio analysis done!")
+
+                if self.isplayer_input.isChecked():
+                    self.mouthmove_input.setText(f" ")
+                    self.mouthmove_input2.setText(f" ")
+                    self.status_label.setText("Audio analysis done: Since IsPlayer was true, the manager only fetched audios length.")
+
+                if not self.isplayer_input.isChecked():
+                    speak_list, unperiodic_list = audio_analyze.analyze_voice_segments(audio_filepath, threshold, window)
+                    self.mouthmove_input.setText(speak_list)
+                    self.mouthmove_input2.setText(unperiodic_list)
+                    self.status_label.setText("Audio analysis done!")
+
         except Exception as e:
             print(f"Error reading audio: {e}")
             self.status_label.setText(f"Error: {str(e)}")
@@ -352,6 +358,10 @@ class DialogueEditor(QMainWindow):
 
                 # Update GUI
                 self.textEdit.insertPlainText(script)
+
+                current_dnumber2 = self.dnumber2_input.text()
+                next_val = int(current_dnumber2) + 1
+                self.dnumber2_input.setText(str(next_val))
 
             except Exception as e:
                 self.status_label.setText(f"Error: {str(e)}")
