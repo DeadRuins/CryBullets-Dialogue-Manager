@@ -97,10 +97,6 @@ class DialogueEditor(QMainWindow):
         self.window_input.setText("0.05")
         self.window_input.setFixedWidth(150)
 
-        # Goto Input
-        self.goto_input = QLineEdit()
-        self.goto_input.setPlaceholderText("Goto Label (e.g. Dialogue2)")
-
         # Frame Name
         self.frame_input = QLineEdit()
         self.frame_input.setPlaceholderText("TNT1")
@@ -197,18 +193,13 @@ class DialogueEditor(QMainWindow):
         seconds_row = QHBoxLayout()
         seconds_row.addWidget(QLabel("Seconds:"))
         seconds_row.addWidget(self.time_input)
-        seconds_row.addWidget(QLabel("Target Label:"))
-        seconds_row.addWidget(self.goto_input)
+        seconds_row.addWidget(QLabel("Audio Threshold [db (decibel)]:"))
+        seconds_row.addWidget(self.threshold_input)
+        seconds_row.addWidget(QLabel("Audio Window [milliseconds]:"))
+        seconds_row.addWidget(self.window_input)
         gen_layout.addLayout(seconds_row)
 
-        # --- ROW 4 & 5 & 6: Speaking Seconds ---
-        analyze_var_row = QHBoxLayout()
-        analyze_var_row.addWidget(QLabel("Audio Threshold [db (decibel)]:"))
-        analyze_var_row.addWidget(self.threshold_input)
-        analyze_var_row.addWidget(QLabel("Audio Window [milliseconds]:"))
-        analyze_var_row.addWidget(self.window_input)
-        gen_layout.addLayout(analyze_var_row)
-
+        # --- ROW 4 & 5 : Speaking Seconds ---
         speaking_row = QHBoxLayout()
         speaking_row.addWidget(QLabel("Mouth Movements (Standard):   "))
         speaking_row.addWidget(self.mouthmove_input)
@@ -334,7 +325,7 @@ class DialogueEditor(QMainWindow):
                 if(progress_automatically):
                     target = f"D{1 + int(self.dnumber2_input.text())}" #D stands for Dialouge
                 else:
-                    target = self.goto_input.text()
+                    target = "D1"
                 secs = self.time_input.text()
                 mouthmove = self.mouthmove_input.text()
                 mouthmove_unperiodic = self.mouthmove_input2.text()
