@@ -1,11 +1,14 @@
 # Crystalled Bullets Dialogue Manager
 
-A Dialogue Manager intented to be used in Crystalled Bullets.
-Written in PyQt6.
+Crystalled Bullets Dialogue Manager is the development assist tool for my video game, Crystalled Bullets.<br>
+This is dialogue manager intented to be used in Crystalled Bullets to help making cutscenes easier.<br>
+Written in Python.
 
 # Screenshots
 
 ![Screenshots](screenshots/GUI_Screenshot.webp) 
+Screenshot taken on Arch Linux running on KDE Plasma 6.7.1 with Oxygen Theme
+
 Note: The app is active development. as such, this GUI of application screen shot can be outdated.
 
 Lip Sync Video Demo:
@@ -19,7 +22,7 @@ Lip Sync Video Demo:
 - Skippable Text by Jump Button.
 - Generates blink animation (optional, only if entered blink animation frame.)
 - Generates Lip Sync Animation when user loaded audio file.
-- Detection of audio where voice actor is screaming or speaking normally via Unperiodic movement of the wave
+- Detection of audio where voice actor is screaming or speaking normally via Unperiodic movement of the wave.
 
 ## ToDo
 
